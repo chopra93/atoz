@@ -1,0 +1,16 @@
+dd any directories, files, or patterns you don't want to be tracked by version control
+
+#Eclipse
+.classpath
+.project
+.settings/
+
+#Maven
+target/
+bin
+logs
+
+#IntelliJ
+.idea/
+*.iml
+

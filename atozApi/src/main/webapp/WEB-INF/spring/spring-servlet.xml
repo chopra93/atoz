@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="com.atoz.*" />
+	<annotation-driven/>
+	<aop:aspectj-autoproxy />
+
+	<beans:bean	class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<beans:property name="locations" value="classpath*:db.properties">
+		</beans:property>
+		<beans:property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<beans:property name="ignoreUnresolvablePlaceholders" value="true" />
+		<beans:property name="order" value="1" />
+	</beans:bean>
+
+	<!-- freemarker config -->
+	<beans:bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<beans:property name="templateLoaderPath" value="/WEB-INF/pages/"/>
+	</beans:bean>
+
+	<beans:import resource="redis-application-context.xml"/>
+
+
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<beans:property name="cache" value="true"/>
+		<beans:property name="prefix" value=""/>
+		<beans:property name="suffix" value=".ftl"/>
+	</beans:bean>
+
+	<!--<beans:bean id="viewResolver"-->
+		<!--class="org.springframework.web.servlet.view.InternalResourceViewResolver" >-->
+		<!--<beans:property name="prefix">-->
+			<!--<beans:value>/WEB-INF/pages/</beans:value>-->
+		<!--</beans:property>-->
+		<!--<beans:property name="suffix">-->
+			<!--<beans:value>.jsp</beans:value>-->
+		<!--</beans:property>-->
+	<!--</beans:bean>-->
+
+</beans:beans>
