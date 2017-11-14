@@ -1,4 +1,4 @@
-package com.cfs.entity;
+package com.cfs.core.entity;
 
 import org.joda.time.DateTime;
 
@@ -15,8 +15,6 @@ BaseEntity implements Serializable {
   private static final long serialVersionUID = 4310332490880086526L;
 
   private Integer id;
-
-  private boolean enabled;
 
   private String createdBy;
 
@@ -65,20 +63,10 @@ BaseEntity implements Serializable {
     this.created = created;
   }
 
-  @Column(name = "enabled")
-  public boolean isEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(boolean enabled) {
-    this.enabled = enabled;
-  }
-
   @Override
   public String toString() {
     return "BaseEntity{" +
             "id=" + id +
-            ", enabled=" + enabled +
             ", createdBy='" + createdBy + '\'' +
             ", updatedBy='" + updatedBy + '\'' +
             ", created=" + created +

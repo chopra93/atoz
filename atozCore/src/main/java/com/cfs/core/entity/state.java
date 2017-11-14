@@ -1,4 +1,4 @@
-package com.cfs.entity;
+package com.cfs.core.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +9,10 @@ import javax.persistence.Table;
  * 11/11/17
  */
 @Entity
-@Table(name = "bank")
-public class Bank extends BaseEntity{
+@Table(name = "state")
+public class state extends BaseEntity{
     private String name;
+    private boolean enabled;
 
     @Column(name = "name", nullable = false)
     public String getName() {
@@ -20,5 +21,14 @@ public class Bank extends BaseEntity{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "enabled", nullable = false)
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

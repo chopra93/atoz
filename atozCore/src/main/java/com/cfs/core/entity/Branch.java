@@ -1,4 +1,4 @@
-package com.cfs.entity;
+package com.cfs.core.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +16,7 @@ public class Branch extends BaseEntity {
     private String branchCode;
     private String micrCode;
     private String address;
+    private boolean enabled;
 
     @Column(name = "ifsc", nullable = false)
     public String getIfsc() {
@@ -60,5 +61,14 @@ public class Branch extends BaseEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Column(name = "enabled", nullable = false)
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

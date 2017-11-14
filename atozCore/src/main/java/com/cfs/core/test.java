@@ -1,4 +1,4 @@
-package com.cfs;
+package com.cfs.core;
 
 /**
  * @author chopra

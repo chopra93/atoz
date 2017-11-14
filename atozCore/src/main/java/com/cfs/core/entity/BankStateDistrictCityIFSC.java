@@ -1,4 +1,4 @@
-package com.cfs.entity;
+package com.cfs.core.entity;
 
 /**
  * @author chopra
@@ -17,6 +17,7 @@ public class BankStateDistrictCityIFSC extends BaseEntity {
     private Integer did;
     private Integer cid;
     private String ifsc;
+    private boolean enabled;
 
     @Column(name = "bid", nullable = false)
     public Integer getBid() {
@@ -61,5 +62,14 @@ public class BankStateDistrictCityIFSC extends BaseEntity {
 
     public void setIfsc(String ifsc) {
         this.ifsc = ifsc;
+    }
+
+    @Column(name = "enabled", nullable = false)
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
