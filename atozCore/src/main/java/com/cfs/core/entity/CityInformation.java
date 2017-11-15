@@ -9,8 +9,8 @@ import javax.persistence.Table;
  * 11/11/17
  */
 @Entity
-@Table(name = "city")
-public class City extends BaseEntity{
+@Table(name = "city_information")
+public class CityInformation extends BaseEntity{
     private String cityName;
     private boolean enabled;
 

@@ -9,8 +9,8 @@ import javax.persistence.Table;
  * 11/11/17
  */
 @Entity
-@Table(name = "state")
-public class state extends BaseEntity{
+@Table(name = "district_information")
+public class DistrictInformation extends BaseEntity{
     private String name;
     private boolean enabled;
 
@@ -32,3 +32,4 @@ public class state extends BaseEntity{
         this.enabled = enabled;
     }
 }
+

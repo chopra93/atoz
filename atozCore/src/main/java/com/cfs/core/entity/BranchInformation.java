@@ -9,8 +9,8 @@ import javax.persistence.Table;
  * 11/11/17
  */
 @Entity
-@Table(name = "branch")
-public class Branch extends BaseEntity {
+@Table(name = "branch_information")
+public class BranchInformation extends BaseEntity {
     private String ifsc;
     private String branch;
     private String branchCode;

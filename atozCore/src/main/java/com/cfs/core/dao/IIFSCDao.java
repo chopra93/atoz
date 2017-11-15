@@ -1,6 +1,6 @@
 package com.cfs.core.dao;
 
-import com.cfs.core.entity.BankInformation;
+import com.cfs.core.entity.*;
 
 import java.util.List;
 
@@ -10,4 +10,8 @@ import java.util.List;
  */
 public interface IIFSCDao {
     List<BankInformation> fetchBankList();
+    List<StateInformation> fetchStateListBasedOnBank(Integer bankId);
+    List<DistrictInformation> fetchDistrictListBasedOnBankState(Integer bankId, Integer stateId);
+    List<CityInformation> fetchCityListBasedOnBankStateDistrict(Integer bankId, Integer stateId, Integer districtId);
+    BranchInformation fetchBranchBasedOnBankStateDistrictCity(Integer bankId, Integer stateId, Integer districtId, Integer cityId);
 }
