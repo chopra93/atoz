@@ -2,9 +2,11 @@ package com.cfs.core.dao.impl;
 
 import com.cfs.core.dao.IIFSCDao;
 import com.cfs.core.entity.*;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,8 @@ import java.util.List;
 @Repository(value = "ifscDaoImpl")
 public class IFSCDaoImpl implements IIFSCDao{
 
+    private static final Logger LOG = Logger.getLogger(IFSCDaoImpl.class);
+
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -28,8 +32,6 @@ public class IFSCDaoImpl implements IIFSCDao{
     public List<BankInformation> fetchBankList() {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(BankInformation.class);
         return (List<BankInformation>) criteria.list();
-//        Query query = sessionFactory.getCurrentSession().createQuery("from BankInformation where enabled = '1'");
-//        return (List<BankInformation>) query.list();
     }
 
     @SuppressWarnings("unchecked")
@@ -45,7 +47,7 @@ public class IFSCDaoImpl implements IIFSCDao{
     @Override
     @Transactional
     public List<DistrictInformation> fetchDistrictListBasedOnBankState(Integer bankId, Integer stateId) {
-        Query query = sessionFactory.getCurrentSession().createQuery("FROM DistrictInformation di,BankStateDistrictCityIFSC bsdci WHERE di.id = bsdci.did AND bsdci.bid =:bid AND bsdci.sid =:sid");
+        Query query = sessionFactory.getCurrentSession().createQuery("SELECT di.id, di.name FROM DistrictInformation di,BankStateDistrictCityIFSC bsdci WHERE di.id = bsdci.did AND bsdci.bid =:bid AND bsdci.sid =:sid");
         query.setParameter("bid", bankId);
         query.setParameter("sid", stateId);
         return (List<DistrictInformation>) query.list();
@@ -55,7 +57,7 @@ public class IFSCDaoImpl implements IIFSCDao{
     @Override
     @Transactional
     public List<CityInformation> fetchCityListBasedOnBankStateDistrict(Integer bankId, Integer stateId, Integer districtId) {
-        Query query = sessionFactory.getCurrentSession().createQuery("FROM CityInformation ci,BankStateDistrictCityIFSC bsdci WHERE ci.id = bsdci.cid AND bsdci.bid =:bid AND bsdci.sid =:sid AND bsdci.did =:did");
+        Query query = sessionFactory.getCurrentSession().createQuery("SELECT ci.id, ci.cityName FROM CityInformation ci,BankStateDistrictCityIFSC bsdci WHERE ci.id = bsdci.cid AND bsdci.bid =:bid AND bsdci.sid =:sid AND bsdci.did =:did");
         query.setParameter("bid", bankId);
         query.setParameter("sid", stateId);
         query.setParameter("did",districtId);
@@ -66,7 +68,7 @@ public class IFSCDaoImpl implements IIFSCDao{
     @Override
     @Transactional
     public BranchInformation fetchBranchBasedOnBankStateDistrictCity(Integer bankId, Integer stateId, Integer districtId, Integer cityId) {
-        Query query = sessionFactory.getCurrentSession().createQuery("FROM BranchInformation bi,BankStateDistrictCityIFSC bsdci WHERE bi.ifsc = bsdci.ifsc AND bsdci.bid =:bid AND bsdci.sid =:sid AND bsdci.did =:did AND bsdci.cid =:cid");
+        Query query = sessionFactory.getCurrentSession().createQuery("SELECT bi.ifsc, bi.branch, bi.branchCode, bi.micrCode, bi.address FROM BranchInformation bi,BankStateDistrictCityIFSC bsdci WHERE bi.ifsc = bsdci.ifsc AND bsdci.bid =:bid AND bsdci.sid =:sid AND bsdci.did =:did AND bsdci.cid =:cid");
         query.setParameter("bid", bankId);
         query.setParameter("sid", stateId);
         query.setParameter("did",districtId);

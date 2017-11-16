@@ -1,9 +1,12 @@
 package com.cfs.api.controller;
 
 import com.cfs.core.entity.*;
+import com.cfs.core.objects.Information;
 import com.cfs.service.IIFSCService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author chopra
@@ -31,48 +35,72 @@ public class IFSCController {
         return ResponseEntity.ok("ok");
     }
 
-    @RequestMapping(value = "/v1/fetchBankList", method = RequestMethod.GET)
-    public ResponseEntity fetchBankList(@Context HttpServletRequest request){
+    @RequestMapping(value = "/v1/fetchBankDetail", method = RequestMethod.GET)
+    public ResponseEntity fetchBankDetails(@RequestParam(value = "bankId", required = false) Integer bankId,
+                                           @RequestParam(value = "stateId", required = false) Integer stateId,
+                                           @RequestParam(value = "districtId", required = false) Integer districtId,
+                                           @RequestParam(value = "cityId", required = false) Integer cityId,
+                                           @Context HttpServletRequest request){
+
         LOG.info("Inside IFSC Controller");
-        List<BankInformation> bankList  = ifscService.fetchBankDetails();
-        return ResponseEntity.ok(bankList);
+        Set<Information> informationSet = null;
+        BranchInformation branchInformation = null;
+        if (bankId !=null && stateId !=null && districtId != null && cityId != null){
+            branchInformation = fetchBranchInformation(bankId,stateId,districtId,cityId);
+            if (branchInformation != null){
+                return ResponseEntity.ok(branchInformation);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+        }
+        else
+        if (bankId !=null && stateId !=null && districtId != null){
+            informationSet = fetchCityList(bankId,stateId,districtId);
+        }
+        else
+        if (bankId !=null && stateId !=null ){
+            informationSet = fetchDistrictList(bankId,stateId);
+        }
+        else
+        if (bankId !=null ){
+            informationSet = fetchStateList(bankId);
+        }
+        else {
+            informationSet = fetchBankList();
+        }
+
+        if (informationSet!=null){
+            return ResponseEntity.ok(informationSet);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @RequestMapping(value = "/v1/fetchStateList", method = RequestMethod.GET)
-    public ResponseEntity fetchStateList(@RequestParam(value = "bankId", required = true) Integer bankId,
-                                         @Context HttpServletRequest request){
-        LOG.info("Inside IFSC Controller");
-        List<StateInformation> stateList  = ifscService.fetchBankDetails(bankId);
-        return ResponseEntity.ok(stateList);
+    private Set<Information> fetchBankList(){
+        Set<Information> bankSet  = ifscService.BankDetails(null,null,null);
+        return bankSet;
     }
 
-    @RequestMapping(value = "/v1/fetchDistrictList", method = RequestMethod.GET)
-    public ResponseEntity fetchDistrictList(@RequestParam(value = "bankId", required = true) Integer bankId,
-                                            @RequestParam(value = "stateId", required = true) Integer stateId,
-                                         @Context HttpServletRequest request){
-        LOG.info("Inside IFSC Controller");
-        List<DistrictInformation> districtList  = ifscService.fetchBankDetails(bankId,stateId);
-        return ResponseEntity.ok(districtList);
+    private Set<Information> fetchStateList(Integer bankId){
+        Set<Information> stateSet  = ifscService.BankDetails(bankId,null,null);
+        return stateSet;
     }
 
-    @RequestMapping(value = "/v1/fetchCityList", method = RequestMethod.GET)
-    public ResponseEntity fetchCityList(@RequestParam(value = "bankId", required = true) Integer bankId,
-                                        @RequestParam(value = "stateId", required = true) Integer stateId,
-                                        @RequestParam(value = "districtId", required = true) Integer districtId,
-                                         @Context HttpServletRequest request){
-        LOG.info("Inside IFSC Controller");
-        List<CityInformation> cityList  = ifscService.fetchBankDetails(bankId,stateId,districtId);
-        return ResponseEntity.ok(cityList);
+    private Set<Information> fetchDistrictList(Integer bankId, Integer stateId){
+        Set<Information> districtSet  = ifscService.BankDetails(bankId,stateId,null);
+        return districtSet;
     }
 
-    @RequestMapping(value = "/v1/fetchBranchInformation", method = RequestMethod.GET)
-    public ResponseEntity fetchBranchInformation(@RequestParam(value = "bankId", required = true) Integer bankId,
-                                                 @RequestParam(value = "stateId", required = true) Integer stateId,
-                                                 @RequestParam(value = "districtId", required = true) Integer districtId,
-                                                 @RequestParam(value = "cityId", required = true) Integer cityId,
-                                                 @Context HttpServletRequest request){
-        LOG.info("Inside IFSC Controller");
-        BranchInformation branchInformation = ifscService.fetchBankDetails(bankId,stateId,districtId,cityId);
-        return ResponseEntity.ok(branchInformation);
+    private Set<Information> fetchCityList(Integer bankId, Integer stateId, Integer districtId){
+        Set<Information> citySet = ifscService.BankDetails(bankId,stateId,districtId);
+        return citySet;
+    }
+
+    private BranchInformation fetchBranchInformation(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
+        BranchInformation branchInformation = ifscService.BankDetails(bankId,stateId,districtId,cityId);
+        return branchInformation;
     }
 }
