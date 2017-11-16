@@ -36,7 +36,7 @@ public class IFSCDaoImpl implements IIFSCDao{
     @Override
     @Transactional
     public List<StateInformation> fetchStateListBasedOnBank(Integer bankId) {
-        Query query = sessionFactory.getCurrentSession().createQuery("FROM StateInformation si,BankStateDistrictCityIFSC bsdci WHERE si.id = bsdci.sid AND bsdci.bid =:bid");
+        Query query = sessionFactory.getCurrentSession().createQuery("SELECT si.id, si.name FROM StateInformation si,BankStateDistrictCityIFSC bsdci WHERE si.id = bsdci.sid AND bsdci.bid =:bid");
         query.setParameter("bid", bankId);
         return (List<StateInformation>) query.list();
     }
