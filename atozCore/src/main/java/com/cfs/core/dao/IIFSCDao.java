@@ -15,5 +15,5 @@ public interface IIFSCDao {
     List<Information> fetchStateListBasedOnBank(Integer bankId);
     List<Information> fetchDistrictListBasedOnBankState(Integer bankId, Integer stateId);
     List<Information> fetchCityListBasedOnBankStateDistrict(Integer bankId, Integer stateId, Integer districtId);
-    IFSC fetchBranchBasedOnBankStateDistrictCity(Integer bankId, Integer stateId, Integer districtId, Integer cityId);
+    List<IFSC> fetchBranchBasedOnBankStateDistrictCity(Integer bankId, Integer stateId, Integer districtId, Integer cityId);
 }

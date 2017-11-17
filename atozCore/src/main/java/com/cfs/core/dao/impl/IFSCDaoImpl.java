@@ -74,29 +74,31 @@ public class IFSCDaoImpl implements IIFSCDao{
     @SuppressWarnings("unchecked")
     @Override
     @Transactional
-    public IFSC fetchBranchBasedOnBankStateDistrictCity(Integer bankId, Integer stateId, Integer districtId, Integer cityId) {
+    public List<IFSC> fetchBranchBasedOnBankStateDistrictCity(Integer bankId, Integer stateId, Integer districtId, Integer cityId) {
         Query query = sessionFactory.getCurrentSession().createQuery("SELECT bi.ifsc, bi.branch, bi.branchCode, bi.micrCode, bi.address FROM BranchInformation bi,BankStateDistrictCityIFSC bsdci WHERE bi.ifsc = bsdci.ifsc AND bsdci.bid =:bid AND bsdci.sid =:sid AND bsdci.did =:did AND bsdci.cid =:cid");
         query.setParameter("bid", bankId);
         query.setParameter("sid", stateId);
         query.setParameter("did",districtId);
         query.setParameter("cid",cityId);
-        Object[] branch = (Object[]) query.uniqueResult();
-        LOG.info("branch ="+branch);
-        IFSC ifsc = new IFSC();
+        List<Object[]> branchInformation = (List<Object[]>)query.list();
+        List<IFSC> ifscList = new ArrayList<>();
+        for (Object[] object: branchInformation){
+            IFSC ifsc = new IFSC();
 
-        String i = (String)branch[0];
-        String bh = (String)branch[1];
-        String bc = (String)branch[2];
-        String mc = (String)branch[3];
-        String add = (String)branch[4];
+            String i = (String)object[0];
+            String bh = (String)object[1];
+            String bc = (String)object[2];
+            String mc = (String)object[3];
+            String add = (String)object[4];
 
-        ifsc.setIfsc(i);
-        ifsc.setBranch(bh);
-        ifsc.setBranchCode(bc);
-        ifsc.setMicrCode(mc);
-        ifsc.setAddress(add);
-
-        return ifsc;
+            ifsc.setIfsc(i);
+            ifsc.setBranch(bh);
+            ifsc.setBranchCode(bc);
+            ifsc.setMicrCode(mc);
+            ifsc.setAddress(add);
+            ifscList.add(ifsc);
+        }
+        return ifscList;
     }
 
     private List<Information> getInformationList(List<Object[]> objectList){
