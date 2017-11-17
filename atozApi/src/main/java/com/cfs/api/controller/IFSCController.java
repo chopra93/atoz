@@ -1,6 +1,7 @@
 package com.cfs.api.controller;
 
 import com.cfs.core.entity.*;
+import com.cfs.core.objects.IFSC;
 import com.cfs.core.objects.Information;
 import com.cfs.service.IIFSCService;
 import org.apache.log4j.Logger;
@@ -44,11 +45,11 @@ public class IFSCController {
 
         LOG.info("Inside IFSC Controller");
         Set<Information> informationSet = null;
-        BranchInformation branchInformation = null;
+        IFSC ifsc = null;
         if (bankId !=null && stateId !=null && districtId != null && cityId != null){
-            branchInformation = fetchBranchInformation(bankId,stateId,districtId,cityId);
-            if (branchInformation != null){
-                return ResponseEntity.ok(branchInformation);
+            ifsc = fetchBranchInformation(bankId,stateId,districtId,cityId);
+            if (ifsc != null){
+                return ResponseEntity.ok(ifsc);
             }
             else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -99,8 +100,8 @@ public class IFSCController {
         return citySet;
     }
 
-    private BranchInformation fetchBranchInformation(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
-        BranchInformation branchInformation = ifscService.BankDetails(bankId,stateId,districtId,cityId);
-        return branchInformation;
+    private IFSC fetchBranchInformation(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
+        IFSC ifsc = ifscService.BankDetails(bankId,stateId,districtId,cityId);
+        return ifsc;
     }
 }

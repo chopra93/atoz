@@ -1,6 +1,7 @@
 package com.cfs.service;
 
 import com.cfs.core.entity.*;
+import com.cfs.core.objects.IFSC;
 import com.cfs.core.objects.Information;
 
 import java.util.List;
@@ -12,5 +13,5 @@ import java.util.Set;
  */
 public interface IIFSCService {
     Set<Information> BankDetails(Integer bankId, Integer stateId, Integer districtId);
-    BranchInformation BankDetails(Integer bankId, Integer stateId, Integer districtId, Integer cityId);
+    IFSC BankDetails(Integer bankId, Integer stateId, Integer districtId, Integer cityId);
 }

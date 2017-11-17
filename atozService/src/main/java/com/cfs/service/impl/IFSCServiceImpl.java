@@ -2,6 +2,7 @@ package com.cfs.service.impl;
 
 import com.cfs.core.dao.IIFSCDao;
 import com.cfs.core.entity.*;
+import com.cfs.core.objects.IFSC;
 import com.cfs.core.objects.Information;
 import com.cfs.service.IIFSCService;
 import org.apache.log4j.Logger;
@@ -26,60 +27,24 @@ public class IFSCServiceImpl implements IIFSCService{
     @Autowired
     private IIFSCDao ifscDao;
 
-    @Transactional
     private Set<Information> fetchBankDetails() {
-        List<BankInformation> bankInformationList = ifscDao.fetchBankList();
-
-        Set<Information> informationSet = new TreeSet<>();
-        for (BankInformation bankInformation:bankInformationList){
-            Information information = new Information();
-            information.setId(bankInformation.getId());
-            information.setName(bankInformation.getBankName());
-            informationSet.add(information);
-        }
-        return informationSet;
+        List<Information> informationList = ifscDao.fetchBankList();
+        return new TreeSet<>(informationList);
     }
 
-    @Transactional
     private Set<Information> fetchBankDetails(Integer bankId){
-        List<StateInformation> stateInformationList = ifscDao.fetchStateListBasedOnBank(bankId);
-
-        Set<Information> informationSet = new TreeSet<>();
-        for (StateInformation stateInformation:stateInformationList){
-            Information information = new Information();
-            information.setId(stateInformation.getId());
-            information.setName(stateInformation.getName());
-            informationSet.add(information);
-        }
-        return informationSet;
+        List<Information> informationList = ifscDao.fetchStateListBasedOnBank(bankId);
+        return new TreeSet<>(informationList);
     }
 
-    @Transactional
     private Set<Information> fetchBankDetails(Integer bankId, Integer stateId){
-        List<DistrictInformation> districtInformationList = ifscDao.fetchDistrictListBasedOnBankState(bankId,stateId);
-
-        Set<Information> informationSet = new TreeSet<>();
-        for (DistrictInformation districtInformation:districtInformationList){
-            Information information = new Information();
-            information.setId(districtInformation.getId());
-            information.setName(districtInformation.getName());
-            informationSet.add(information);
-        }
-        return informationSet;
+        List<Information> informationList = ifscDao.fetchDistrictListBasedOnBankState(bankId,stateId);
+        return new TreeSet<>(informationList);
     }
 
-    @Transactional
     private Set<Information> fetchBankDetails(Integer bankId, Integer stateId, Integer districtId){
-        List<CityInformation> cityInformationList = ifscDao.fetchCityListBasedOnBankStateDistrict(bankId,stateId,districtId);
-
-        Set<Information> informationSet = new TreeSet<>();
-        for (CityInformation cityInformation:cityInformationList){
-            Information information = new Information();
-            information.setId(cityInformation.getId());
-            information.setName(cityInformation.getCityName());
-            informationSet.add(information);
-        }
-        return informationSet;
+        List<Information> informationList = ifscDao.fetchCityListBasedOnBankStateDistrict(bankId,stateId,districtId);
+        return new TreeSet<>(informationList);
     }
 
     @Override
@@ -103,7 +68,7 @@ public class IFSCServiceImpl implements IIFSCService{
 
     @Override
     @Transactional
-    public BranchInformation BankDetails(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
+    public IFSC BankDetails(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
         return ifscDao.fetchBranchBasedOnBankStateDistrictCity(bankId,stateId,districtId,cityId);
     }
 }
