@@ -26,6 +26,6 @@ public class EMIServiceImpl implements IEMIService {
         rate = rate / 1200;
         fraction = (Math.pow((1+rate),n))/(Math.pow((1+rate),n)-1);
         emiValue = principle * rate * fraction;
-        return emiValue;
+        return Math.ceil(emiValue);
     }
 }
