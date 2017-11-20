@@ -45,11 +45,11 @@ public class IFSCController {
 
         LOG.info("Inside IFSC Controller");
         Set<Information> informationSet = null;
-        IFSC ifsc = null;
+        List<IFSC> ifscList = null;
         if (bankId !=null && stateId !=null && districtId != null && cityId != null){
-            ifsc = fetchBranchInformation(bankId,stateId,districtId,cityId);
-            if (ifsc != null){
-                return ResponseEntity.ok(ifsc);
+            ifscList = fetchBranchInformation(bankId,stateId,districtId,cityId);
+            if (ifscList != null){
+                return ResponseEntity.ok(ifscList);
             }
             else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,8 +100,8 @@ public class IFSCController {
         return citySet;
     }
 
-    private IFSC fetchBranchInformation(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
-        IFSC ifsc = ifscService.BankDetails(bankId,stateId,districtId,cityId);
-        return ifsc;
+    private List<IFSC> fetchBranchInformation(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
+        List<IFSC> ifscList = ifscService.BankDetails(bankId,stateId,districtId,cityId);
+        return ifscList;
     }
 }
