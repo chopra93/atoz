@@ -83,7 +83,7 @@ public class HibernateConfig {
             try {
                 dbCredentials.url = "jdbc:mysql://localhost:3306/ifsc";
                 dbCredentials.user = "root";
-                dbCredentials.pass = "";
+                dbCredentials.pass = "root";
             }
             catch (Exception e){
                 throw new VaultException("exception");

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -67,6 +68,8 @@ public class IFSCServiceImpl implements IIFSCService{
     @Override
     @Transactional
     public List<IFSC> BankDetails(Integer bankId, Integer stateId, Integer districtId, Integer cityId){
-        return ifscDao.fetchBranchBasedOnBankStateDistrictCity(bankId,stateId,districtId,cityId);
+        List<IFSC> ifscList = ifscDao.fetchBranchBasedOnBankStateDistrictCity(bankId,stateId,districtId,cityId);
+        Collections.sort(ifscList);
+        return ifscList;
     }
 }

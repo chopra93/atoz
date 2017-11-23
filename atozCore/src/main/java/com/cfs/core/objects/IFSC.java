@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by Chopra on 16/11/17.
  */
-public class IFSC {
+public class IFSC implements Comparable<IFSC>{
     private String ifsc;
     private String branch;
     private String branchCode;
@@ -62,5 +62,10 @@ public class IFSC {
                 ", micrCode='" + micrCode + '\'' +
                 ", address='" + address + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(IFSC o) {
+        return this.branch.compareTo(o.getBranch());
     }
 }
