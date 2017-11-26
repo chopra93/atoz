@@ -114,3 +114,19 @@ CREATE TABLE `access_tokens_history` (
 
 insert into docm_property(`name`,`value`,`enabled`,`created_by`,`updated_by`)values("primary.use.cache","true",1,"atoz","atoz");
 insert into docm_property(`name`,`value`,`enabled`,`created_by`,`updated_by`)values("primary.use.redis","true",1,"atoz","atoz");
+
+CREATE TABLE `pincode_information` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pincode` VARCHAR(32) NOT NULL,
+  `state` VARCHAR(80) NOT NULL,
+  `district` VARCHAR(80) NOT NULL,
+  `city` VARCHAR(80) NOT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_pincode` (`pincode`),
+  UNIQUE KEY `psdc` (`pincode`,`state`,`district`,`city`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
