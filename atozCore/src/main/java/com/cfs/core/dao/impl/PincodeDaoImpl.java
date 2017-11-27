@@ -29,11 +29,14 @@ public class PincodeDaoImpl implements IPincodeDao {
     public PincodeInforamtionDTO getPincodeInformationBasedOnPicode(String pincode) {
         Query query = sessionFactory.getCurrentSession().createQuery("SELECT pi.state, pi.district, pi.city FROM PincodeInformation pi WHERE pi.pincode =:pincode");
         query.setParameter("pincode",pincode);
-        Object[] obj = (Object[])query.uniqueResult();
+        List<Object[]> objList = (List<Object[]>)query.list();
         PincodeInforamtionDTO pincodeInforamtionDTO = new PincodeInforamtionDTO();
-        pincodeInforamtionDTO.setState((String)obj[0]);
-        pincodeInforamtionDTO.setCity((String)obj[2]);
 
+        for(Object[] obj:objList){
+            pincodeInforamtionDTO.setState((String)obj[0]);
+            pincodeInforamtionDTO.setCity((String)obj[2]);
+            break;
+        }
         return pincodeInforamtionDTO;
     }
 
