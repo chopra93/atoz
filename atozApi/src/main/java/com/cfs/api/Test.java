@@ -20,17 +20,9 @@ import javax.ws.rs.core.Context;
 @RestController
 public class Test {
 
-    @Autowired
-    private IOtpService otpService;
-
-    @RequestMapping(value = "/v1/sendOtp", method = RequestMethod.GET)
-    public ResponseEntity sendOtp(@RequestParam(value = "phoneNo", required = true) String phoneNo,
-                                  @Context HttpServletRequest request){
-        OtpResponse response = otpService.sendOtp(phoneNo);
-        if (response!=null)
-            return ResponseEntity.ok(response);
-        else
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    @RequestMapping(value = "/health", method = RequestMethod.GET)
+    public ResponseEntity test(){
+        return ResponseEntity.ok("ok");
     }
 
 }

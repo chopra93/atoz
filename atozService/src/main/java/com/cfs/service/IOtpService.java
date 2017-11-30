@@ -8,4 +8,5 @@ import com.cfs.core.objects.OtpResponse;
  */
 public interface IOtpService {
     OtpResponse sendOtp(String mobileNo);
+    OtpResponse validateOtp(String mobileNo,String otp);
 }
