@@ -19,5 +19,7 @@ public class VaultConstants {
     public static final String VAULT_REDIS_MAX_IDLE = "redis.pool.maxIdle";
     public static final String VAULT_REDIS_TEST_ON_BORROW = "redis.pool.testOnBorrow";
 
+    public static final String VAULT_ACCESS_KEY_ID = "aws.access.key.id";
+    public static final String VAULT_SECRET_KEY = "aws.secret.key";
 
 }
