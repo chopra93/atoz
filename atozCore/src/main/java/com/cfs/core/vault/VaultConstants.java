@@ -6,7 +6,7 @@ package com.cfs.core.vault;
  */
 public class VaultConstants {
 
-    public static final String VAULT_APPLICATION_PATH = "/secret/atoz/";
+    public static final String VAULT_APPLICATION_PATH = "secret/atoz/";
     //"secret/uad/";
 
     public static final String VAULT_MYSQL_DB_USER = "db.user";
