@@ -26,28 +26,28 @@ public class VaultSetup {
     private VaultConfig  config;
     private Vault        vault;
 
-//    @Bean
-//    public Vault vault() throws Exception {
-//        return vault;
-//    }
+    @Bean
+    public Vault vault() throws Exception {
+        return vault;
+    }
 
-//    @PostConstruct
-//    private void init() throws VaultException, IOException {
-//        InputStream stream = null;
-//        try {
-//            if (vault != null)
-//                return;
-//            config = new VaultConfig(VaultProperties.VAULT_SERVER_URL,VaultProperties.VAULT_TOKEN);
-//            vault = new Vault(config);
-//            LOGGER.info("Vault has been successfully initialized");
-//        } catch (Exception e) {
-//            LOGGER.error("Exception while initializing vault : " + e);
-//            throw new Error("Failed to initialize vault");
-//        } finally {
-//            if (stream != null) {
-//                stream.close();
-//            }
-//        }
-//    }
+    @PostConstruct
+    private void init() throws VaultException, IOException {
+        InputStream stream = null;
+        try {
+            if (vault != null)
+                return;
+            config = new VaultConfig(VaultProperties.VAULT_SERVER_URL,VaultProperties.VAULT_TOKEN);
+            vault = new Vault(config);
+            LOGGER.info("Vault has been successfully initialized");
+        } catch (Exception e) {
+            LOGGER.error("Exception while initializing vault : " + e);
+            throw new Error("Failed to initialize vault");
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+        }
+    }
 
 }

@@ -27,7 +27,8 @@ import java.util.Properties;
 
 @Configuration("hibernateConfig") @EnableTransactionManagement @DependsOn("vaultSetup")
 public class HibernateConfig {
-    //@Autowired private Vault vault;
+    @Autowired private Vault vault;
+
     private DBCredentials dbCredentials;
     private BasicDataSource basicDataSource;
     private SessionFactory sessionFactory;
@@ -79,26 +80,26 @@ public class HibernateConfig {
             LOGGER.info("Vault profile: "+ VaultProperties.VAULT_PROFILE );
             LOGGER.info("Vault server URL: "+VaultProperties.VAULT_SERVER_URL );
 
-            // todo remove this code
-            try {
-                dbCredentials.url = "jdbc:mysql://localhost:3306/ifsc";
-                dbCredentials.user = "root";
-                dbCredentials.pass = "root";
-            }
-            catch (Exception e){
-                throw new VaultException("exception");
-            }
+//            // todo remove this code
+//            try {
+//                dbCredentials.url = "jdbc:mysql://localhost:3306/ifsc";
+//                dbCredentials.user = "root";
+//                dbCredentials.pass = "root";
+//            }
+//            catch (Exception e){
+//                throw new VaultException("exception");
+//            }
 
-//            dbCredentials.url = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_MYSQL_DB_URL);
-//            LOGGER.info("Redis URl received from vault = " + dbCredentials.url);
-//            dbCredentials.user = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_MYSQL_DB_USER);
-//            dbCredentials.pass = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_MYSQL_DB_PASS);
+            dbCredentials.url = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_MYSQL_DB_URL);
+            LOGGER.info("Redis URl received from vault = " + dbCredentials.url);
+            dbCredentials.user = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_MYSQL_DB_USER);
+            dbCredentials.pass = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_MYSQL_DB_PASS);
         } catch (VaultException e) {
             throw new Error("Failed to read database creds from Vault", e);
         }

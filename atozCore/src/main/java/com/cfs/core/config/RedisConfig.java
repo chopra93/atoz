@@ -25,7 +25,8 @@ import javax.annotation.PostConstruct;
  */
 
 @DependsOn("vaultSetup") @Configuration("redisConfig") public class RedisConfig {
-    //@Autowired private Vault vault;
+    @Autowired private Vault vault;
+
     private RedisCredentials redisCredentials;
     private static final Logger LOGGER = Logger.getLogger(RedisConfig.class);
 
@@ -74,37 +75,37 @@ import javax.annotation.PostConstruct;
         this.redisCredentials = new RedisCredentials();
         try {
             // todo remove this code
-            try {
-                redisCredentials.host = "localhost";
-                redisCredentials.pass = "";
-                redisCredentials.maxTotal = "1024";
-                redisCredentials.maxIdle = "200";
-                redisCredentials.maxWaitMillis = "2000";
-                redisCredentials.testOnBorrow = "false";
-            }
-            catch (Exception e){
-                throw new VaultException("exception");
-            }
+//            try {
+//                redisCredentials.host = "localhost";
+//                redisCredentials.pass = "";
+//                redisCredentials.maxTotal = "1024";
+//                redisCredentials.maxIdle = "200";
+//                redisCredentials.maxWaitMillis = "2000";
+//                redisCredentials.testOnBorrow = "false";
+//            }
+//            catch (Exception e){
+//                throw new VaultException("exception");
+//            }
 
-//            redisCredentials.host = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_REDIS_HOST);
-//            LOGGER.info("Redis URl received from vault = " + redisCredentials.host);
-//            redisCredentials.pass = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_REDIS_SERVER_PASS);
-//            redisCredentials.maxTotal = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_REDIS_MAX_TOTAL);
-//            redisCredentials.maxIdle = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_REDIS_MAX_IDLE);
-//            redisCredentials.maxWaitMillis = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_REDIS_MAX_WAIT);
-//            redisCredentials.testOnBorrow = vault.logical()
-//                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-//                .getData().get(VaultConstants.VAULT_REDIS_TEST_ON_BORROW);
+            redisCredentials.host = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_REDIS_HOST);
+            LOGGER.info("Redis URl received from vault = " + redisCredentials.host);
+            redisCredentials.pass = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_REDIS_SERVER_PASS);
+            redisCredentials.maxTotal = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_REDIS_MAX_TOTAL);
+            redisCredentials.maxIdle = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_REDIS_MAX_IDLE);
+            redisCredentials.maxWaitMillis = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_REDIS_MAX_WAIT);
+            redisCredentials.testOnBorrow = vault.logical()
+                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
+                .getData().get(VaultConstants.VAULT_REDIS_TEST_ON_BORROW);
 
         } catch (VaultException e) {
             throw new Error("Failed to read Redis creds from Vault", e);

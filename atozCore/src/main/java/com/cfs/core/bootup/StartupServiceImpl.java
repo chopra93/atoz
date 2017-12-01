@@ -22,9 +22,9 @@ public class StartupServiceImpl {
 
 
     @PostConstruct private void init() {
-//        VaultProperties.VAULT_PROFILE = environment.getProperty("VAULT_PROFILE", "default");
-//        VaultProperties.VAULT_SERVER_URL = environment.getProperty("VAULT_SERVER_URL");
-//        VaultProperties.VAULT_TOKEN = environment.getProperty("VAULT_TOKEN");
+        VaultProperties.VAULT_PROFILE = environment.getProperty("VAULT_PROFILE", "default");
+        VaultProperties.VAULT_SERVER_URL = environment.getProperty("VAULT_SERVER_URL");
+        VaultProperties.VAULT_TOKEN = environment.getProperty("VAULT_TOKEN");
         LOGGER.info("Loaded vault properties");
     }
 }
