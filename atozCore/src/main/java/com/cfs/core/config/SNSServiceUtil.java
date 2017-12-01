@@ -13,6 +13,7 @@ import com.cfs.core.vault.VaultConstants;
 import com.cfs.core.vault.VaultProperties;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
