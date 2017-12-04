@@ -10,11 +10,13 @@ import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.MessageAttributeValue;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
+import com.bettercloud.vault.Vault;
 import com.cfs.core.config.SNSServiceUtil;
 import com.cfs.core.objects.OtpResponse;
 import com.cfs.service.IOtpService;
 import com.cfs.service.IRedisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +31,13 @@ import java.util.Random;
 @Service(value = "otpServiceImpl")
 public class OtpServiceImpl implements IOtpService{
 
+    @Autowired
+    private SNSServiceUtil snsServiceUtil;
 
     @Autowired
     private IRedisService redisService;
+
+
 
     @Override
     public OtpResponse sendOtp(String mobileNo) {
@@ -52,9 +58,8 @@ public class OtpServiceImpl implements IOtpService{
             redisService.deleteValue(mobileNo);
         }
 
-        SNSServiceUtil snsClient = SNSServiceUtil.getInstance();
         try {
-            snsClient.sendMessage(message,mobileNo);
+            snsServiceUtil.sendMessage(message,mobileNo);
             redisService.setValue(mobileNo,otp,600000);
             otpResponse.setMessage("success");
             otpResponse.setStatusCode(200);

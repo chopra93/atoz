@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,34 +23,30 @@ import java.util.Map;
 /**
  * Created by Chopra on 30/11/17.
  */
-@Component
-public final class SNSServiceUtil {
+@DependsOn("vaultSetup")
+@Component("snsServiceUtil")
+public class SNSServiceUtil {
 
     private static final Logger LOG = Logger.getLogger(SNSServiceUtil.class);
 
-    @Autowired
-    private Vault vault;
+    private final Vault vault;
 
-    private static volatile SNSServiceUtil snsInstance = null;
-    private static AmazonSNS amazonSNS;
-    /*
-    dbCredentials.url = vault.logical()
-                .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
-                .getData().get(VaultConstants.VAULT_MYSQL_DB_URL);
-
-     */
+    private AmazonSNS amazonSNS;
 
     private String accesskeyId;
     private String secretkey;
     private Map<String, MessageAttributeValue> smsAttributes = new HashMap<>();
 
 
-    private SNSServiceUtil(){
+    @Autowired
+    public SNSServiceUtil(Vault vault){
+        this.vault = vault;
         init();
     }
 
     private void init(){
         try {
+            LOG.info("loading sns configuration");
             accesskeyId = vault.logical().read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE).getData().get(VaultConstants.VAULT_ACCESS_KEY_ID);
             secretkey = vault.logical().read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE).getData().get(VaultConstants.VAULT_SECRET_KEY);
             LOG.info("accesskeyId:secretkey"+accesskeyId+":"+secretkey);
@@ -62,22 +59,9 @@ public final class SNSServiceUtil {
         smsAttributes.put("AWS.SNS.SMS.SMSType", new MessageAttributeValue().withStringValue("Transactional").withDataType("String"));
     }
 
-    public static SNSServiceUtil getInstance(){
-        if (snsInstance == null){
-            synchronized (SNSServiceUtil.class){
-                if (snsInstance == null){
-                    snsInstance = new SNSServiceUtil();
-                }
-            }
-        }
-        return snsInstance;
-    }
-
     public void sendMessage(String message,String mobileNo){
         amazonSNS.publish(new PublishRequest()
                 .withMessage(message)
                 .withPhoneNumber(mobileNo).withMessageAttributes(smsAttributes));
     }
-
-
 }

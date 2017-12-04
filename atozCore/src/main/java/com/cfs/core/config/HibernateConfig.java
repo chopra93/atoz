@@ -76,6 +76,7 @@ public class HibernateConfig {
     @PostConstruct private void readCredentialsFromVault() {
         this.dbCredentials = new DBCredentials();
         try {
+            LOGGER.info("loading Hibernate Configuration");
             LOGGER.info("Vault path: "+ VaultConstants.VAULT_APPLICATION_PATH);
             LOGGER.info("Vault profile: "+ VaultProperties.VAULT_PROFILE );
             LOGGER.info("Vault server URL: "+VaultProperties.VAULT_SERVER_URL );
@@ -100,6 +101,8 @@ public class HibernateConfig {
             dbCredentials.pass = vault.logical()
                 .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
                 .getData().get(VaultConstants.VAULT_MYSQL_DB_PASS);
+
+            LOGGER.info("loaded Hibernate Configuration");
         } catch (VaultException e) {
             throw new Error("Failed to read database creds from Vault", e);
         }

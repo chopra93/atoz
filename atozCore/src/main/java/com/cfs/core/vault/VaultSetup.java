@@ -19,37 +19,19 @@ import java.io.InputStream;
  * 12/11/17
  */
 
-@Component
 @Configuration("vaultSetup")
 @DependsOn("startupService")
 public class VaultSetup {
     private final static Logger LOGGER = LoggerFactory.getLogger(VaultSetup.class);
 
-    private VaultConfig  config;
-    private Vault        vault;
+    private Vault vault;
 
     @Bean
-    public Vault vault() throws Exception {
+    public Vault getVault() throws  Exception{
+        VaultConfig config = new VaultConfig(VaultProperties.VAULT_SERVER_URL,VaultProperties.VAULT_TOKEN);
+        vault = new Vault(config);
         return vault;
     }
 
-    @PostConstruct
-    private void init() throws VaultException, IOException {
-        InputStream stream = null;
-        try {
-            if (vault != null)
-                return;
-            config = new VaultConfig(VaultProperties.VAULT_SERVER_URL,VaultProperties.VAULT_TOKEN);
-            vault = new Vault(config);
-            LOGGER.info("Vault has been successfully initialized");
-        } catch (Exception e) {
-            LOGGER.error("Exception while initializing vault : " + e);
-            throw new Error("Failed to initialize vault");
-        } finally {
-            if (stream != null) {
-                stream.close();
-            }
-        }
-    }
 
 }

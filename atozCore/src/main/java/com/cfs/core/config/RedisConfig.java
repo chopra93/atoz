@@ -73,6 +73,7 @@ import javax.annotation.PostConstruct;
 
     @PostConstruct private void readCredentialsFromVault() {
         this.redisCredentials = new RedisCredentials();
+        LOGGER.info("loading Redis Configuration");
         try {
             // todo remove this code
 //            try {
@@ -106,6 +107,8 @@ import javax.annotation.PostConstruct;
             redisCredentials.testOnBorrow = vault.logical()
                 .read(VaultConstants.VAULT_APPLICATION_PATH + VaultProperties.VAULT_PROFILE)
                 .getData().get(VaultConstants.VAULT_REDIS_TEST_ON_BORROW);
+
+            LOGGER.info("loaded Redis Configuration");
 
         } catch (VaultException e) {
             throw new Error("Failed to read Redis creds from Vault", e);
