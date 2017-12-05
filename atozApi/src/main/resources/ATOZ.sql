@@ -130,3 +130,51 @@ CREATE TABLE `pincode_information` (
   UNIQUE KEY `psdc` (`pincode`,`state`,`district`,`city`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `username` VARCHAR(100) NOT NULL,
+  `phone` VARCHAR(10) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_user` (`username`),
+  UNIQUE KEY `uuv` (`username`),
+  UNIQUE KEY `upv` (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `access_token` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `token` VARCHAR(100) NOT NULL,
+  `expiry` VARCHAR (100) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_by` varchar(50) DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_us` (`user_id`),
+  UNIQUE KEY `utv` (`token`),
+  CONSTRAINT `FK_user_id_to_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `service` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `service_type` VARCHAR(100) NOT NULL,
+  `limit` VARCHAR (100) NOT NULL,
+  `expiry` VARCHAR (100) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_by` varchar(50) DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_ser_us` (`user_id`),
+  UNIQUE KEY `uusv` (`user_id`,`service_type`),
+  CONSTRAINT `FK_service_user_id_to_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
