@@ -1,6 +1,7 @@
 package com.cfs.core.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author chopra
@@ -14,7 +15,7 @@ public class Users extends BaseEntity{
     private String phone;
     private String email;
     private AccessToken accessToken;
-    private Service service;
+    private Set<Service> service;
 
     @Column(name = "name", nullable = false)
     public String getName() {
@@ -52,7 +53,7 @@ public class Users extends BaseEntity{
         this.email = email;
     }
 
-    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "accessTokenUsers", cascade = CascadeType.ALL)
     public AccessToken getAccessToken() {
         return accessToken;
     }
@@ -62,11 +63,11 @@ public class Users extends BaseEntity{
     }
 
     @OneToMany(mappedBy = "serviceUsers", cascade = CascadeType.ALL)
-    public Service getService() {
+    public Set<Service> getService() {
         return service;
     }
 
-    public void setService(Service service) {
+    public void setService(Set<Service> service) {
         this.service = service;
     }
 }

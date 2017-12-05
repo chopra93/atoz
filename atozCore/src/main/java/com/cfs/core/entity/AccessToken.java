@@ -12,7 +12,7 @@ public class AccessToken extends BaseEntity{
     private String token;
     private String expiry;
     private boolean isActive;
-    private Users users;
+    private Users accessTokenUsers;
 
     @Column(name = "token", nullable = false)
     public String getToken() {
@@ -44,10 +44,10 @@ public class AccessToken extends BaseEntity{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     public Users getUsers() {
-        return users;
+        return accessTokenUsers;
     }
 
     public void setUsers(Users users) {
-        this.users = users;
+        this.accessTokenUsers = users;
     }
 }
