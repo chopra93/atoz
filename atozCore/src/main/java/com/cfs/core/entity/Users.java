@@ -14,6 +14,7 @@ public class Users extends BaseEntity{
     private String username;
     private String phone;
     private String email;
+    private String pwd;
     private AccessToken accessToken;
     private Set<Service> service;
 
@@ -69,5 +70,14 @@ public class Users extends BaseEntity{
 
     public void setService(Set<Service> service) {
         this.service = service;
+    }
+
+    @Column(name = "pwd", nullable = false)
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 }

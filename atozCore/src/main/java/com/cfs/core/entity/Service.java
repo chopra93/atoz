@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Service extends BaseEntity{
     private String serviceType;
     private String limit;
-    private String expiry;
+    private Long expiry;
     private boolean isActive;
     private Users serviceUsers;
 
@@ -34,11 +34,11 @@ public class Service extends BaseEntity{
     }
 
     @Column(name = "expiry", nullable = false)
-    public String getExpiry() {
+    public Long getExpiry() {
         return expiry;
     }
 
-    public void setExpiry(String expiry) {
+    public void setExpiry(Long expiry) {
         this.expiry = expiry;
     }
 

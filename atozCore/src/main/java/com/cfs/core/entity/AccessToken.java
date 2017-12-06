@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Table(name = "access_token")
 public class AccessToken extends BaseEntity{
     private String token;
-    private String expiry;
+    private Long expiry;
     private boolean isActive;
     private Users accessTokenUsers;
 
@@ -24,11 +24,11 @@ public class AccessToken extends BaseEntity{
     }
 
     @Column(name = "expiry", nullable = false)
-    public String getExpiry() {
+    public Long getExpiry() {
         return expiry;
     }
 
-    public void setExpiry(String expiry) {
+    public void setExpiry(Long expiry) {
         this.expiry = expiry;
     }
 
@@ -43,11 +43,11 @@ public class AccessToken extends BaseEntity{
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    public Users getUsers() {
+    public Users getAccessTokenUsers() {
         return accessTokenUsers;
     }
 
-    public void setUsers(Users users) {
-        this.accessTokenUsers = users;
+    public void setAccessTokenUsers(Users accessTokenUsers) {
+        this.accessTokenUsers = accessTokenUsers;
     }
 }
