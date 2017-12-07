@@ -167,7 +167,7 @@ CREATE TABLE `service` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `service_type` VARCHAR(100) NOT NULL,
-  `limit` VARCHAR (100) NOT NULL,
+  `msg_limit` VARCHAR (100) NOT NULL,
   `expiry` bigint(20) NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_by` varchar(50) DEFAULT NULL,

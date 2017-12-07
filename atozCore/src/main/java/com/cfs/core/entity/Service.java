@@ -12,7 +12,7 @@ public class Service extends BaseEntity{
     private String serviceType;
     private String limit;
     private Long expiry;
-    private boolean isActive;
+    private boolean active;
     private Users serviceUsers;
 
     @Column(name = "service_type", nullable = false)
@@ -24,7 +24,7 @@ public class Service extends BaseEntity{
         this.serviceType = serviceType;
     }
 
-    @Column(name = "limit", nullable = false)
+    @Column(name = "msg_limit", nullable = false)
     public String getLimit() {
         return limit;
     }
@@ -44,13 +44,12 @@ public class Service extends BaseEntity{
 
     @Column(name = "is_active", nullable = false)
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

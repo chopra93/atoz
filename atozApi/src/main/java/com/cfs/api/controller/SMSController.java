@@ -1,8 +1,6 @@
 package com.cfs.api.controller;
 
-import com.cfs.core.objects.LoginDTO;
-import com.cfs.core.objects.LoginResponse;
-import com.cfs.core.objects.UserDTO;
+import com.cfs.core.objects.*;
 import com.cfs.service.ISMSService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class SMSController {
     @RequestMapping(value = "/v1/user/signUp",method = RequestMethod.POST)
     public ResponseEntity testUsernameInsert(@RequestBody UserDTO user,
                                              @Context HttpServletRequest request){
-        boolean response = smsService.insertUser(user);
+        boolean response = smsService.userSignUp(user);
         return ResponseEntity.ok(response);
     }
 
@@ -51,7 +49,41 @@ public class SMSController {
         else {
             return new ResponseEntity<>(loginResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
+    @RequestMapping(value = "/v1/user/logout",method = RequestMethod.POST)
+    public ResponseEntity userLogout(@RequestBody TokenRequest tokenRequest,
+                                     @Context HttpServletRequest request){
+        LogoutResponse logoutResponse = smsService.userLogout(tokenRequest.getToken());
+        if (logoutResponse.getStatusCode() == 200) {
+            return ResponseEntity.ok(logoutResponse);
+        }
+        else {
+            return new ResponseEntity<>(logoutResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/v1/user/createService",method = RequestMethod.POST)
+    public ResponseEntity userCreateService(@RequestBody ServiceDTO serviceDTO,
+                                     @Context HttpServletRequest request){
+        ServiceResponse serviceResponse = smsService.createNewService(serviceDTO);
+        if (serviceResponse.getStatusCode() == 200) {
+            return ResponseEntity.ok(serviceResponse);
+        }
+        else {
+            return new ResponseEntity<>(serviceResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/v1/user/fetchService",method = RequestMethod.POST)
+    public ResponseEntity userCreateService(@RequestBody TokenRequest tokenRequest,
+                                            @Context HttpServletRequest request){
+        ServiceResponse serviceResponse = smsService.fetchAllActiveServices(tokenRequest.getToken());
+        if (serviceResponse.getStatusCode() == 200) {
+            return ResponseEntity.ok(serviceResponse);
+        }
+        else {
+            return new ResponseEntity<>(serviceResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -17,5 +17,7 @@ public interface IRedisService {
     void putInMap(String mapname, String key, String value);
 
     String getFromMap(String mapname, String key);
+
+    Long deleteFromMap(String mapname, String key);
 }
 

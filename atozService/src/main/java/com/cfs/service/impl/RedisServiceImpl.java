@@ -63,4 +63,11 @@ public class RedisServiceImpl implements IRedisService {
         Object value = redisTemplate.opsForHash().get(mapname, key);
         return value == null ? null : String.valueOf(value);
     }
+
+    @Override
+    public Long deleteFromMap(String mapname, String key) {
+        LOGGER.debug("Deleting value from map : " + mapname + " for key : " + key);
+        Object value = redisTemplate.opsForHash().delete(mapname, key);
+        return value == null ? 0 : (Long) value;
+    }
 }
