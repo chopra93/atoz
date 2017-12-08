@@ -249,8 +249,6 @@ public class SMSServiceImpl implements ISMSService {
             UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);
             Users users = smsDao.fetchUserUsingUsername(userDetail.getUsername());
 
-            int val = findRecordTable(users.getId());
-
             InputStreamReader inputStreamReader = new InputStreamReader(item.openStream());
             CSVReader reader = new CSVReader(inputStreamReader);
             String[] line;
@@ -260,53 +258,14 @@ public class SMSServiceImpl implements ISMSService {
                     LOGGER.info("size of numbers = "+line.length);
                     if (line[i].length() <13 && line[i].length()>4){
 
-                        switch (val){
-                            case 0:
-                                RecordOne recordOne = new RecordOne();
-                                recordOne.setActive(true);
-                                recordOne.setMessage(messageObject);
-                                recordOne.setMobile(line[i]);
-                                recordOne.setRecordOneUser(users);
+                        RecordOne recordOne = new RecordOne();
+                        recordOne.setActive(true);
+                        recordOne.setMessage(messageObject);
+                        recordOne.setMobile(line[i]);
+                        recordOne.setRecordOneUser(users);
 
-                                smsDao.addRecord(recordOne);
-                                break;
-                            case 1:
-                                RecordTwo recordTwo = new RecordTwo();
-                                recordTwo.setActive(true);
-                                recordTwo.setMessage(messageObject);
-                                recordTwo.setMobile(line[i]);
-                                recordTwo.setRecordTwoUser(users);
+                        smsDao.addRecord(recordOne);
 
-                                smsDao.addRecordTwo(recordTwo);
-                                break;
-                            case 2:
-                                RecordThree recordThree = new RecordThree();
-                                recordThree.setActive(true);
-                                recordThree.setMessage(messageObject);
-                                recordThree.setMobile(line[i]);
-                                recordThree.setRecordThreeUser(users);
-
-                                smsDao.addRecordThree(recordThree);
-                                break;
-                            case 3:
-                                RecordFour recordFour = new RecordFour();
-                                recordFour.setActive(true);
-                                recordFour.setMessage(messageObject);
-                                recordFour.setMobile(line[i]);
-                                recordFour.setRecordFourUser(users);
-
-                                smsDao.addRecordFour(recordFour);
-                                break;
-                            case 4:
-                                RecordFive recordFive = new RecordFive();
-                                recordFive.setActive(true);
-                                recordFive.setMessage(messageObject);
-                                recordFive.setMobile(line[i]);
-                                recordFive.setRecordFiveUser(users);
-
-                                smsDao.addRecordFive(recordFive);
-                                break;
-                        }
                     }
                 }
             }
@@ -316,10 +275,6 @@ public class SMSServiceImpl implements ISMSService {
             LOGGER.info("Exception Occured");
             return false;
         }
-    }
-
-    private int findRecordTable(int id){
-        return id%5;
     }
 
 }

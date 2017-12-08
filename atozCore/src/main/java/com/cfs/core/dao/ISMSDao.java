@@ -25,20 +25,4 @@ public interface ISMSDao {
     boolean addMessage(Message message);
     boolean addRecord(RecordOne recordOne);
     Message getMessage(String message);
-
-    @SuppressWarnings("unchecked")
-    @Transactional
-    boolean addRecordTwo(RecordTwo recordTwo);
-
-    @SuppressWarnings("unchecked")
-    @Transactional
-    boolean addRecordThree(RecordThree recordThree);
-
-    @SuppressWarnings("unchecked")
-    @Transactional
-    boolean addRecordFour(RecordFour recordFour);
-
-    @SuppressWarnings("unchecked")
-    @Transactional
-    boolean addRecordFive(RecordFive recordFive);
 }

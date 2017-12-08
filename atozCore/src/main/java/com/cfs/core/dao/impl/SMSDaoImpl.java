@@ -176,36 +176,4 @@ public class SMSDaoImpl implements ISMSDao {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    @Transactional
-    public boolean addRecordTwo(RecordTwo recordTwo){
-        sessionFactory.getCurrentSession().save(recordTwo);
-        return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    @Transactional
-    public boolean addRecordThree(RecordThree recordThree){
-        sessionFactory.getCurrentSession().save(recordThree);
-        return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    @Transactional
-    public boolean addRecordFour(RecordFour recordFour){
-        sessionFactory.getCurrentSession().save(recordFour);
-        return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    @Transactional
-    public boolean addRecordFive(RecordFive recordFive){
-        sessionFactory.getCurrentSession().save(recordFive);
-        return true;
-    }
-
 }
