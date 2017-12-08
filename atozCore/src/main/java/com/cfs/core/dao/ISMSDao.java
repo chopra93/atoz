@@ -1,11 +1,10 @@
 package com.cfs.core.dao;
 
-import com.cfs.core.entity.AccessToken;
-import com.cfs.core.entity.Service;
-import com.cfs.core.entity.Users;
+import com.cfs.core.entity.*;
 import com.cfs.core.objects.LoginDTO;
 import com.cfs.core.objects.ServiceDTO;
 import com.cfs.core.objects.UserDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,4 +22,23 @@ public interface ISMSDao {
     boolean insertService(Service service);
     List<ServiceDTO> fetchAllActiveService(String username);
     String fetchAccessTokenBasedOnUser(Users userDetail);
+    boolean addMessage(Message message);
+    boolean addRecord(RecordOne recordOne);
+    Message getMessage(String message);
+
+    @SuppressWarnings("unchecked")
+    @Transactional
+    boolean addRecordTwo(RecordTwo recordTwo);
+
+    @SuppressWarnings("unchecked")
+    @Transactional
+    boolean addRecordThree(RecordThree recordThree);
+
+    @SuppressWarnings("unchecked")
+    @Transactional
+    boolean addRecordFour(RecordFour recordFour);
+
+    @SuppressWarnings("unchecked")
+    @Transactional
+    boolean addRecordFive(RecordFive recordFive);
 }

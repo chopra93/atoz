@@ -14,6 +14,7 @@ public class UserDTO {
     private String username;
     private String phone;
     private String email;
+    private String accessToken;
     private String pwd;
     private String pwdCompare;
 
@@ -65,6 +66,14 @@ public class UserDTO {
         this.pwdCompare = pwdCompare;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -72,6 +81,7 @@ public class UserDTO {
                 ", username='" + username + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
+                ", accessToken='" + accessToken + '\'' +
                 ", pwd='" + pwd + '\'' +
                 ", pwdCompare='" + pwdCompare + '\'' +
                 '}';

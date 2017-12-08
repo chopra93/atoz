@@ -2,17 +2,22 @@ package com.cfs.service.impl;
 
 import com.cfs.constant.AtozConstants;
 import com.cfs.core.dao.ISMSDao;
-import com.cfs.core.entity.AccessToken;
-import com.cfs.core.entity.Users;
+import com.cfs.core.entity.*;
 import com.cfs.core.enums.ServiceEnum;
 import com.cfs.core.objects.*;
 import com.cfs.service.IRedisService;
 import com.cfs.service.ISMSService;
+import com.google.gson.Gson;
+import com.mongodb.util.JSON;
+import com.opencsv.CSVReader;
+import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +31,8 @@ import java.util.UUID;
 public class SMSServiceImpl implements ISMSService {
 
     private static final Logger LOGGER = Logger.getLogger(SMSServiceImpl.class);
+    private static final Gson GSON = new Gson();
+
 
     @Autowired
     private  ISMSDao smsDao;
@@ -42,7 +49,12 @@ public class SMSServiceImpl implements ISMSService {
     public boolean userSignUp(UserDTO users) {
         if ((users.getPwd()).equals(users.getPwdCompare()))
         {
-            return smsDao.userSignUp(users);
+            try {
+                return smsDao.userSignUp(users);
+            }
+            catch (Exception e ){
+                return false;
+            }
         }
         else
             return false;
@@ -63,6 +75,16 @@ public class SMSServiceImpl implements ISMSService {
         }
         String tokenFromDB = smsDao.fetchAccessTokenBasedOnUser(user);
         if (tokenFromDB!= null ){
+            String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,tokenFromDB);
+            if (valueJsonUsername == null){
+                redisService.putInMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,tokenFromDB, GSON.toJson(convertFromUserDTOTOUsers(user)));
+            }
+            else {
+                UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);
+                if (!tokenFromDB.equals(userDetail.getAccessToken())){
+                    redisService.putInMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,tokenFromDB, GSON.toJson(convertFromUserDTOTOUsers(user)));
+                }
+            }
             loginResponse.setMessage("success");
             loginResponse.setToken(tokenFromDB);
             loginResponse.setStatus(200);
@@ -81,7 +103,7 @@ public class SMSServiceImpl implements ISMSService {
 
         boolean accessTokenInsertResponse = smsDao.insertAccessToken(accessToken);
         if (accessTokenInsertResponse){
-            redisService.putInMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token,user.getUsername());
+            redisService.putInMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token, GSON.toJson(user));
             loginResponse.setMessage("success");
             loginResponse.setToken(token);
             loginResponse.setStatus(200);
@@ -123,8 +145,8 @@ public class SMSServiceImpl implements ISMSService {
             serviceResponse.setStatusCode(500);
             return serviceResponse;
         }
-        String username = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,serviceDTO.getToken());
-        if (StringUtils.isEmpty(username)){
+        String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,serviceDTO.getToken());
+        if (StringUtils.isEmpty(valueJsonUsername)){
             serviceResponse.setMessage("Invalid Token");
             serviceResponse.setStatusCode(500);
             return serviceResponse;
@@ -144,13 +166,14 @@ public class SMSServiceImpl implements ISMSService {
                 serviceEntity.setServiceType(ServiceEnum.BULK.toString());
             }
 
-            Users userDetail = smsDao.fetchUserUsingUsername(username);
+            UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);
+            Users users = smsDao.fetchUserUsingUsername(userDetail.getUsername());
             if (userDetail == null){
                 serviceResponse.setMessage("Token Expired");
                 serviceResponse.setStatusCode(500);
                 return serviceResponse;
             }
-            serviceEntity.setServiceUsers(userDetail);
+            serviceEntity.setServiceUsers(users);
 
             try {
                 Boolean serviceInsertionResponse = smsDao.insertService(serviceEntity);
@@ -177,13 +200,14 @@ public class SMSServiceImpl implements ISMSService {
     @Override
     public ServiceResponse fetchAllActiveServices(String token){
         ServiceResponse serviceResponse = new ServiceResponse();
-        String username = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token);
-        if (StringUtils.isEmpty(username)){
+        String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token);
+        if (StringUtils.isEmpty(valueJsonUsername)){
             serviceResponse.setMessage("Invalid Token");
             serviceResponse.setStatusCode(500);
             return serviceResponse;
         }
-        List<ServiceDTO> serviceDTOS = smsDao.fetchAllActiveService(username);
+        UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);
+        List<ServiceDTO> serviceDTOS = smsDao.fetchAllActiveService(userDetail.getUsername());
         if (serviceDTOS.isEmpty()){
             serviceResponse.setMessage("No Active Service");
             serviceResponse.setStatusCode(500);
@@ -193,6 +217,109 @@ public class SMSServiceImpl implements ISMSService {
         serviceResponse.setStatusCode(200);
         serviceResponse.setServiceList(serviceDTOS);
         return serviceResponse;
+    }
+
+    private UserDTO convertFromUserDTOTOUsers(Users users){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(users.getName());
+        userDTO.setUsername(users.getUsername());
+        userDTO.setAccessToken(users.getAccessToken().getToken());
+        userDTO.setEmail(users.getEmail());
+        userDTO.setPhone(users.getPhone());
+        return userDTO;
+    }
+
+    @Override
+    public boolean addMobileNumberAndMessage(String token, FileItemStream item, String message) {
+        try {
+            Message messageObject = smsDao.getMessage(message);
+            if (messageObject == null){
+                LOGGER.info("null message respone received");
+                Message insetToMessage = new Message();
+                insetToMessage.setActive(true);
+                insetToMessage.setMessage(message);
+                boolean responseFromMessageInsertion = smsDao.addMessage(insetToMessage);
+                if (!responseFromMessageInsertion){
+                    return false;
+                }
+                messageObject = smsDao.getMessage(message);
+            }
+
+            String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token);
+            UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);
+            Users users = smsDao.fetchUserUsingUsername(userDetail.getUsername());
+
+            int val = findRecordTable(users.getId());
+
+            InputStreamReader inputStreamReader = new InputStreamReader(item.openStream());
+            CSVReader reader = new CSVReader(inputStreamReader);
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                int currentLenth = line.length;
+                for (int i=0;i<currentLenth;i++){
+                    LOGGER.info("size of numbers = "+line.length);
+                    if (line[i].length() <13 && line[i].length()>4){
+
+                        switch (val){
+                            case 0:
+                                RecordOne recordOne = new RecordOne();
+                                recordOne.setActive(true);
+                                recordOne.setMessage(messageObject);
+                                recordOne.setMobile(line[i]);
+                                recordOne.setRecordOneUser(users);
+
+                                smsDao.addRecord(recordOne);
+                                break;
+                            case 1:
+                                RecordTwo recordTwo = new RecordTwo();
+                                recordTwo.setActive(true);
+                                recordTwo.setMessage(messageObject);
+                                recordTwo.setMobile(line[i]);
+                                recordTwo.setRecordTwoUser(users);
+
+                                smsDao.addRecordTwo(recordTwo);
+                                break;
+                            case 2:
+                                RecordThree recordThree = new RecordThree();
+                                recordThree.setActive(true);
+                                recordThree.setMessage(messageObject);
+                                recordThree.setMobile(line[i]);
+                                recordThree.setRecordThreeUser(users);
+
+                                smsDao.addRecordThree(recordThree);
+                                break;
+                            case 3:
+                                RecordFour recordFour = new RecordFour();
+                                recordFour.setActive(true);
+                                recordFour.setMessage(messageObject);
+                                recordFour.setMobile(line[i]);
+                                recordFour.setRecordFourUser(users);
+
+                                smsDao.addRecordFour(recordFour);
+                                break;
+                            case 4:
+                                RecordFive recordFive = new RecordFive();
+                                recordFive.setActive(true);
+                                recordFive.setMessage(messageObject);
+                                recordFive.setMobile(line[i]);
+                                recordFive.setRecordFiveUser(users);
+
+                                smsDao.addRecordFive(recordFive);
+                                break;
+                        }
+                    }
+                }
+            }
+            return true;
+
+        } catch (IOException e) {
+            LOGGER.info("Exception Occured");
+            return false;
+        }
+    }
+
+    private int findRecordTable(int id){
+        return id%5;
     }
 
 }

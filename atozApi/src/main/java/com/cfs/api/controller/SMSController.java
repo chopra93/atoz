@@ -2,14 +2,23 @@ package com.cfs.api.controller;
 
 import com.cfs.core.objects.*;
 import com.cfs.service.ISMSService;
+import com.opencsv.CSVReader;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import java.io.*;
 
 /**
  * @author chopra
@@ -86,4 +95,33 @@ public class SMSController {
             return new ResponseEntity<>(serviceResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/v2/user/upload",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity uploadMultiPart(@RequestParam(value="message",required = true) String message,
+                                          @RequestParam(value="token",required = true) String token,
+                                          @Context HttpServletRequest request){
+
+        try {
+            ServletFileUpload upload = new ServletFileUpload();
+            FileItemIterator iter = upload.getItemIterator(request);
+            if (!iter.hasNext()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            FileItemStream item = iter.next();
+            if (StringUtils.isEmpty(message) || StringUtils.isEmpty(token)){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            smsService.addMobileNumberAndMessage(token,item,message);
+            return ResponseEntity.ok("");
+        }
+        catch (FileUploadException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok("");
+    }
+
 }

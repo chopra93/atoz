@@ -1,9 +1,7 @@
 package com.cfs.core.dao.impl;
 
 import com.cfs.core.dao.ISMSDao;
-import com.cfs.core.entity.AccessToken;
-import com.cfs.core.entity.Service;
-import com.cfs.core.entity.Users;
+import com.cfs.core.entity.*;
 import com.cfs.core.objects.LoginDTO;
 import com.cfs.core.objects.ServiceDTO;
 import com.cfs.core.objects.UserDTO;
@@ -145,6 +143,69 @@ public class SMSDaoImpl implements ISMSDao {
             serviceDTOList.add(serviceDTO);
         }
         return serviceDTOList;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public boolean addMessage(Message message){
+        sessionFactory.getCurrentSession().save(message);
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public Message getMessage(String message){
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Message m WHERE m.message =:message");
+        query.setParameter("message", message);
+        List<Object> objList = query.list();
+        if (objList == null || objList.size() == 0)
+            return null;
+        else {
+            Message message1 = (Message) objList.get(0);
+            return message1;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public boolean addRecord(RecordOne recordOne){
+        sessionFactory.getCurrentSession().save(recordOne);
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public boolean addRecordTwo(RecordTwo recordTwo){
+        sessionFactory.getCurrentSession().save(recordTwo);
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public boolean addRecordThree(RecordThree recordThree){
+        sessionFactory.getCurrentSession().save(recordThree);
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public boolean addRecordFour(RecordFour recordFour){
+        sessionFactory.getCurrentSession().save(recordFour);
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public boolean addRecordFive(RecordFive recordFive){
+        sessionFactory.getCurrentSession().save(recordFive);
+        return true;
     }
 
 }

@@ -17,6 +17,12 @@ public class Users extends BaseEntity{
     private String pwd;
     private AccessToken accessToken;
     private Set<Service> service;
+    private Set<RecordOne> recodeOne;
+    private Set<RecordTwo> recordTwo;
+    private Set<RecordThree> recordThree;
+    private Set<RecordFour> recordFour;
+    private Set<RecordFive> recordFive;
+
 
     @Column(name = "name", nullable = false)
     public String getName() {
@@ -79,5 +85,50 @@ public class Users extends BaseEntity{
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    @OneToMany(mappedBy = "recordOneUser", cascade = CascadeType.ALL)
+    public Set<RecordOne> getRecodeOne() {
+        return recodeOne;
+    }
+
+    public void setRecodeOne(Set<RecordOne> recodeOne) {
+        this.recodeOne = recodeOne;
+    }
+
+    @OneToMany(mappedBy = "recordTwoUser", cascade = CascadeType.ALL)
+    public Set<RecordTwo> getRecordTwo() {
+        return recordTwo;
+    }
+
+    public void setRecordTwo(Set<RecordTwo> recordTwo) {
+        this.recordTwo = recordTwo;
+    }
+
+    @OneToMany(mappedBy = "recordThreeUser", cascade = CascadeType.ALL)
+    public Set<RecordThree> getRecordThree() {
+        return recordThree;
+    }
+
+    public void setRecordThree(Set<RecordThree> recordThree) {
+        this.recordThree = recordThree;
+    }
+
+    @OneToMany(mappedBy = "recordFourUser", cascade = CascadeType.ALL)
+    public Set<RecordFour> getRecordFour() {
+        return recordFour;
+    }
+
+    public void setRecordFour(Set<RecordFour> recordFour) {
+        this.recordFour = recordFour;
+    }
+
+    @OneToMany(mappedBy = "recordFiveUser", cascade = CascadeType.ALL)
+    public Set<RecordFive> getRecordFive() {
+        return recordFive;
+    }
+
+    public void setRecordFive(Set<RecordFive> recordFive) {
+        this.recordFive = recordFive;
     }
 }

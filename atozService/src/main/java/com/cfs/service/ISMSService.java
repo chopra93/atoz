@@ -2,6 +2,7 @@ package com.cfs.service;
 
 import com.cfs.core.entity.Users;
 import com.cfs.core.objects.*;
+import org.apache.commons.fileupload.FileItemStream;
 
 /**
  * @author chopra
@@ -16,4 +17,5 @@ public interface ISMSService {
 
     ServiceResponse createNewService(ServiceDTO serviceDTO);
     ServiceResponse fetchAllActiveServices(String token);
+    boolean addMobileNumberAndMessage(String token, FileItemStream item,String message);
 }
