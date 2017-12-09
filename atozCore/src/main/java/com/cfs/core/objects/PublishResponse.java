@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OtpResponse {
+public class PublishResponse {
     private String message;
     private Integer statusCode;
 
@@ -31,7 +31,7 @@ public class OtpResponse {
 
     @Override
     public String toString() {
-        return "OtpResponse{" +
+        return "PublishResponse{" +
                 "message='" + message + '\'' +
                 ", statusCode=" + statusCode +
                 '}';

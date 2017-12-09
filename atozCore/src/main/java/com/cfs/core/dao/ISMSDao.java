@@ -25,4 +25,5 @@ public interface ISMSDao {
     boolean addMessage(Message message);
     boolean addRecord(RecordOne recordOne);
     Message getMessage(String message);
+    Integer updateLimit(Integer id, String currLimit, String serviceType);
 }

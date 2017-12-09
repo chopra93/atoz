@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceDTO {
+    private Integer id;
     @NotNull
     private String token;
     @NotNull
@@ -20,6 +21,14 @@ public class ServiceDTO {
     @NotNull
     private String limit;
     private Long expiry;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getToken() {
         return token;
@@ -56,10 +65,11 @@ public class ServiceDTO {
     @Override
     public String toString() {
         return "ServiceDTO{" +
-                "token='" + token + '\'' +
+                "id=" + id +
+                ", token='" + token + '\'' +
                 ", serviceType='" + serviceType + '\'' +
                 ", limit='" + limit + '\'' +
-                ", expiry='" + expiry + '\'' +
+                ", expiry=" + expiry +
                 '}';
     }
 }

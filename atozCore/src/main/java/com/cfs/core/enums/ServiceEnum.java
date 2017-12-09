@@ -5,5 +5,5 @@ package com.cfs.core.enums;
  * 06/12/17
  */
 public enum ServiceEnum {
-    OTP,BULK;
+    OTP,BULK,SMS;
 }

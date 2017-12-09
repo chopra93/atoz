@@ -162,8 +162,13 @@ public class SMSServiceImpl implements ISMSService {
             if ((ServiceEnum.OTP.toString()).equals(serviceDTO.getServiceType())){
                 serviceEntity.setServiceType(ServiceEnum.OTP.toString());
             }
-            else {
+            else
+            if((ServiceEnum.BULK.toString()).equals(serviceDTO.getServiceType()))
+            {
                 serviceEntity.setServiceType(ServiceEnum.BULK.toString());
+            }
+            else {
+                serviceEntity.setServiceType(ServiceEnum.SMS.toString());
             }
 
             UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);

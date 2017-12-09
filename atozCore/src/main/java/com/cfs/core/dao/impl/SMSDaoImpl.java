@@ -130,16 +130,17 @@ public class SMSDaoImpl implements ISMSDao {
     public List<ServiceDTO> fetchAllActiveService(String username){
         Date date = new Date();
         Long currentTime = date.getTime();
-        Query query = sessionFactory.getCurrentSession().createQuery("SELECT s.serviceType, s.limit, s.expiry FROM Service s left join s.serviceUsers su WHERE s.expiry>=:expiryTime  AND s.active=1 AND su.username=:username");
+        Query query = sessionFactory.getCurrentSession().createQuery("SELECT s.id, s.serviceType, s.limit, s.expiry FROM Service s left join s.serviceUsers su WHERE s.expiry>=:expiryTime  AND s.active=1 AND su.username=:username");
         query.setParameter("username", username);
         query.setParameter("expiryTime",currentTime);
         List<Object[]> objList = (List<Object[]>) query.list();
         List<ServiceDTO> serviceDTOList = new ArrayList<>();
         for (Object[] obj:objList){
             ServiceDTO serviceDTO = new ServiceDTO();
-            serviceDTO.setServiceType((String) obj[0]);
-            serviceDTO.setLimit((String) obj[1]);
-            serviceDTO.setExpiry((Long) obj[2]);
+            serviceDTO.setId((int)obj[0]);
+            serviceDTO.setServiceType((String) obj[1]);
+            serviceDTO.setLimit((String) obj[2]);
+            serviceDTO.setExpiry((Long) obj[3]);
             serviceDTOList.add(serviceDTO);
         }
         return serviceDTOList;
@@ -174,6 +175,17 @@ public class SMSDaoImpl implements ISMSDao {
     public boolean addRecord(RecordOne recordOne){
         sessionFactory.getCurrentSession().save(recordOne);
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public Integer updateLimit(Integer id, String currLimit, String serviceType){
+        Query query = sessionFactory.getCurrentSession().createQuery("UPDATE Service s SET s.limit=:currLimit WHERE s.serviceType=:serviceType AND s.id=:id");
+        query.setParameter("currLimit", currLimit);
+        query.setParameter("serviceType", serviceType);
+        query.setParameter("id", id);
+        return query.executeUpdate();
     }
 
 }
