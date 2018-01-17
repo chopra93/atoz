@@ -271,3 +271,37 @@ CREATE TABLE `record_five` (
   CONSTRAINT `FK_rfi_mid_to_mid` FOREIGN KEY (`msg_id`) REFERENCES `message` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_rfi_uid_to_uid` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `users_loan` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `phone` varchar(10) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `up` (`phone`),
+  KEY `idx_phone` (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `loan_information` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `loan_amount` bigint(100) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `duration` int(10) DEFAULT NULL,
+  `preference_one` varchar(10) NOT NULL,
+  `preference_two` varchar(10) DEFAULT NULL,
+  `preference_three` varchar(10) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_by` varchar(50) DEFAULT NULL,
+  `updated_by` varchar(50) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK__loan_user_id_to_users_id` FOREIGN KEY (`user_id`) REFERENCES `users_loan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `idx_users_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

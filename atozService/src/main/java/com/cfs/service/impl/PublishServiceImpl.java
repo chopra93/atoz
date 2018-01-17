@@ -41,11 +41,13 @@ public class PublishServiceImpl implements IPublishService {
         PublishResponse publishResponse = new PublishResponse();
 
         String token = publishMsgRequest.getToken();
-        String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token);
-        if (valueJsonUsername == null){
-            publishResponse.setMessage("Invalid User");
-            publishResponse.setStatusCode(500);
-            return publishResponse;
+        if (!token.equalsIgnoreCase(AtozConstants.DEFAULT_TOKEN)) {
+            String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME, token);
+            if (valueJsonUsername == null) {
+                publishResponse.setMessage("Invalid User");
+                publishResponse.setStatusCode(500);
+                return publishResponse;
+            }
         }
 
 
@@ -80,52 +82,66 @@ public class PublishServiceImpl implements IPublishService {
             return publishResponse;
         }
 
-        // checking limit
-
-        String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token);
-        UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);
-        String username = userDetail.getUsername();
-        Users users = smsDao.fetchUserUsingUsername(username);
-        List<ServiceDTO> serviceDTOList = smsDao.fetchAllActiveService(username);
-        String otpLimit = "0";
-        Integer serviceId = 0;
-        for (ServiceDTO serviceDTO: serviceDTOList){
-            if ((serviceDTO.getServiceType()).equalsIgnoreCase(type.toString())){
-                 otpLimit = serviceDTO.getLimit();
-                 serviceId = serviceDTO.getId();
-                 break;
+        if (token.equalsIgnoreCase(AtozConstants.DEFAULT_TOKEN)){
+            try {
+                message = message.replace(AtozConstants.OTP_TXT,otp);
+                mobileNo = "+91"+mobileNo;
+                snsServiceUtil.sendMessage(message,mobileNo);
+                redisService.setValue("LOAN-"+ mobileNo,otp,600000);
+                publishResponse.setMessage("success");
+                publishResponse.setStatusCode(200);
+            }
+            catch (Exception e){
+                publishResponse.setMessage("failure");
+                publishResponse.setStatusCode(500);
             }
         }
-
-        int currLimit = Integer.valueOf(otpLimit);
-        if(currLimit > 1){
-            currLimit = currLimit - 1;
-        }
         else {
-            publishResponse.setMessage("Limit reached!! Buy further plan");
-            publishResponse.setStatusCode(500);
-            return publishResponse;
-        }
+            String valueJsonUsername = redisService.getFromMap(AtozConstants.USERTOKEN_USERNAME_MAP_NAME,token);
+            UserDTO userDetail = GSON.fromJson(valueJsonUsername, UserDTO.class);
+            String username = userDetail.getUsername();
+            Users users = smsDao.fetchUserUsingUsername(username);
+            List<ServiceDTO> serviceDTOList = smsDao.fetchAllActiveService(username);
+            String otpLimit = "0";
+            Integer serviceId = 0;
+            for (ServiceDTO serviceDTO: serviceDTOList){
+                if ((serviceDTO.getServiceType()).equalsIgnoreCase(type.toString())){
+                    otpLimit = serviceDTO.getLimit();
+                    serviceId = serviceDTO.getId();
+                    break;
+                }
+            }
 
-        message = message.replace(AtozConstants.OTP_TXT,otp);
-        mobileNo = "+91"+mobileNo;
+            int currLimit = Integer.valueOf(otpLimit);
+            if(currLimit > 1){
+                currLimit = currLimit - 1;
+            }
+            else {
+                publishResponse.setMessage("Limit reached!! Buy further plan");
+                publishResponse.setStatusCode(500);
+                return publishResponse;
+            }
 
-        String valueReceivedFromRedis = redisService.getValue(mobileNo);
-        if (valueReceivedFromRedis !=null){
-            redisService.deleteValue(mobileNo);
-        }
+            message = message.replace(AtozConstants.OTP_TXT,otp);
+            mobileNo = "+91"+mobileNo;
 
-        try {
-            snsServiceUtil.sendMessage(message,mobileNo);
-            Integer updatedResponse = smsDao.updateLimit(serviceId,String.valueOf(currLimit),ServiceEnum.OTP.toString());
-            redisService.setValue(mobileNo,otp,600000);
-            publishResponse.setMessage("success");
-            publishResponse.setStatusCode(200);
+            String valueReceivedFromRedis = redisService.getValue(mobileNo);
+            if (valueReceivedFromRedis !=null){
+                redisService.deleteValue(mobileNo);
+            }
 
-        }
-        catch (Exception e){
-            publishResponse.setMessage("failure");
-            publishResponse.setStatusCode(500);
+            try {
+                snsServiceUtil.sendMessage(message,mobileNo);
+                Integer updatedResponse = smsDao.updateLimit(serviceId,String.valueOf(currLimit),ServiceEnum.OTP.toString());
+                redisService.setValue(mobileNo,otp,600000);
+                publishResponse.setMessage("success");
+                publishResponse.setStatusCode(200);
+
+            }
+            catch (Exception e){
+                publishResponse.setMessage("failure");
+                publishResponse.setStatusCode(500);
+            }
         }
         return publishResponse;
     }

@@ -97,9 +97,9 @@ public class SMSController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/v2/user/upload",
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/v2/user/upload")
+//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+//            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity uploadMultiPart(@RequestParam(value="message",required = true) String message,
                                           @RequestParam(value="token",required = true) String token,
                                           @Context HttpServletRequest request){
