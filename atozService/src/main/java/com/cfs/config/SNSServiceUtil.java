@@ -1,4 +1,4 @@
-package com.cfs.core.config;
+package com.cfs.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;

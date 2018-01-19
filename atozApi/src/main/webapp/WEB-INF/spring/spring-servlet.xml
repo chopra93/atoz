@@ -5,11 +5,23 @@
 			 xmlns:context="http://www.springframework.org/schema/context"
 			 xmlns:tx="http://www.springframework.org/schema/tx"
 			 xmlns:aop="http://www.springframework.org/schema/aop"
+			 xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 			 xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
 
 	<context:component-scan base-package="com.cfs.*" />
 	<annotation-driven/>
 	<aop:aspectj-autoproxy />
+
+	<!--<context:property-placeholder location="classpath*:db.properties" order="1"-->
+								  <!--ignore-unresolvable="true"/>-->
+
+	<!--<rabbit:connection-factory id="connectionFactory" host="localhost" />-->
+
+	<!--<rabbit:template id="amqpTemplate" connection-factory="connectionFactory"-->
+					 <!--exchange="smsExchange"/>-->
+
 </beans:beans>

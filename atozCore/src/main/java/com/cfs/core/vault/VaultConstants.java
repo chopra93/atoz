@@ -22,4 +22,9 @@ public class VaultConstants {
     public static final String VAULT_ACCESS_KEY_ID = "aws.access.key.id";
     public static final String VAULT_SECRET_KEY = "aws.secret.key";
 
+    public static final String VAULT_RABBIT_HOST_URL = "rabbit.host.url";
+    public static final String VAULT_RABBIT_EXCHANGE = "rabbit.exchange";
+    public static final String VAULT_RABBIT_KEY = "rabbit.key";
+    public static final String VAULT_RABBIT_QUEUE = "rabbit.queue";
+
 }

@@ -1,7 +1,7 @@
 package com.cfs.service.impl;
 
+import com.cfs.config.SNSServiceUtil;
 import com.cfs.constant.AtozConstants;
-import com.cfs.core.config.SNSServiceUtil;
 import com.cfs.core.dao.ISMSDao;
 import com.cfs.core.entity.Users;
 import com.cfs.core.enums.ServiceEnum;

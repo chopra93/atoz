@@ -1,4 +1,4 @@
-package com.cfs.core.config;
+package com.cfs.config;
 
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultException;
