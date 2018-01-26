@@ -33,7 +33,7 @@ public class EMIController {
         EMIResponse emiResponse = new EMIResponse();
         Long res = emiService.calculateEMI(p,r,t,type);
         BigDecimal b = BigDecimal.valueOf(res);
-        Integer month = (type==YearMonth.YEAR)?t:12*t;
+        Integer month = (type==YearMonth.YEAR)?(12*t):t;
 
         emiResponse.setAmount((new BigDecimal(p)).toString());
         emiResponse.setRate(Double.toString(r));
@@ -78,7 +78,7 @@ public class EMIController {
         Long res = emiService.calculateRDInterest(p,r,t,type,cType);
         BigDecimal b = BigDecimal.valueOf(res);
 
-        Integer month = (type==YearMonth.YEAR)?t:12*t;
+        Integer month = (type==YearMonth.YEAR)?(12*t):t;
         Integer duration = emiService.getValueInYear(cType);
 
         emiResponse.setAmount((new BigDecimal(p)).toString());
